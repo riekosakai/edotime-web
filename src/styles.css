@@ -604,3 +604,120 @@ p {
     min-height: 5.8rem;
   }
 }
+
+.timeline-plot {
+  position: relative;
+  padding-top: 1.85rem;
+  padding-bottom: 2.4rem;
+}
+
+.timeline-plot .timeline-track {
+  width: 100%;
+}
+
+.timeline-plot .timeline-marker {
+  top: 1.85rem;
+  bottom: 2.4rem;
+}
+
+.timeline-marker-label {
+  position: absolute;
+  max-width: min(34vw, 9rem);
+  white-space: normal;
+  line-height: 1.2;
+  font-size: 0.74rem;
+  background: rgba(255, 255, 255, 0.94);
+  padding: 0.3rem 0.45rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(22, 34, 48, 0.08);
+}
+
+.timeline-marker-label.top {
+  bottom: calc(100% + 0.45rem);
+}
+
+.timeline-marker-label.bottom {
+  top: calc(100% + 0.55rem);
+}
+
+.timeline-marker-label[data-anchor="center"] {
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.timeline-marker-label[data-anchor="start"] {
+  left: 0.4rem;
+  transform: none;
+  text-align: left;
+}
+
+.timeline-marker-label[data-anchor="end"] {
+  right: 0.4rem;
+  left: auto;
+  transform: none;
+  text-align: right;
+}
+
+.timeline-marker.sunrise-marker::before,
+.timeline-marker.sunset-marker::before {
+  top: 0.15rem;
+}
+
+.timeline-marker.now-marker::before {
+  top: -0.1rem;
+}
+
+.location-picker-header {
+  align-items: start;
+}
+
+.location-primary-button {
+  flex-shrink: 0;
+}
+
+@media (max-width: 720px) {
+  .timeline-plot {
+    padding-top: 2rem;
+    padding-bottom: 3.1rem;
+  }
+
+  .timeline-plot .timeline-marker {
+    top: 2rem;
+    bottom: 3.1rem;
+  }
+
+  .timeline-marker-label {
+    max-width: min(40vw, 8.5rem);
+    font-size: 0.7rem;
+  }
+
+  .location-primary-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 430px) {
+  .timeline-plot {
+    padding-top: 2.2rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .timeline-plot .timeline-marker {
+    top: 2.2rem;
+    bottom: 3.5rem;
+  }
+
+  .timeline-marker-label {
+    max-width: 7.25rem;
+    font-size: 0.68rem;
+  }
+
+  .timeline-marker-label.top {
+    bottom: calc(100% + 0.35rem);
+  }
+
+  .timeline-marker-label.bottom {
+    top: calc(100% + 0.45rem);
+  }
+}

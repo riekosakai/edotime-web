@@ -1,8 +1,10 @@
 import { useState } from "react";
 
+type GeolocationErrorCode = "unsupported" | "denied" | "unavailable" | "timeout";
+
 type GeolocationState = {
   loading: boolean;
-  error: string | null;
+  error: GeolocationErrorCode | null;
 };
 
 export function useGeolocation() {
@@ -10,7 +12,8 @@ export function useGeolocation() {
 
   async function getCurrentPosition() {
     if (!("geolocation" in navigator)) {
-      setState({ loading: false, error: "unavailable" });
+      console.warn("[geolocation] unsupported browser");
+      setState({ loading: false, error: "unsupported" });
       throw new Error("Geolocation unsupported");
     }
 
@@ -19,20 +22,28 @@ export function useGeolocation() {
     return new Promise<GeolocationPosition>((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          console.info("[geolocation] success", {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            accuracy: position.coords.accuracy,
+          });
           setState({ loading: false, error: null });
           resolve(position);
         },
         (error) => {
-          setState({
-            loading: false,
-            error: error.code === error.PERMISSION_DENIED ? "denied" : "unavailable",
+          const nextError = mapGeolocationError(error);
+          console.warn("[geolocation] failure", {
+            code: error.code,
+            message: error.message,
+            mapped: nextError,
           });
+          setState({ loading: false, error: nextError });
           reject(error);
         },
         {
-          enableHighAccuracy: false,
+          enableHighAccuracy: true,
           timeout: 10000,
-          maximumAge: 60000,
+          maximumAge: 300000,
         },
       );
     });
@@ -42,4 +53,17 @@ export function useGeolocation() {
     ...state,
     getCurrentPosition,
   };
+}
+
+function mapGeolocationError(error: GeolocationPositionError): GeolocationErrorCode {
+  switch (error.code) {
+    case error.PERMISSION_DENIED:
+      return "denied";
+    case error.POSITION_UNAVAILABLE:
+      return "unavailable";
+    case error.TIMEOUT:
+      return "timeout";
+    default:
+      return "unavailable";
+  }
 }

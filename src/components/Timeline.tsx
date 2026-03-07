@@ -15,6 +15,8 @@ type TimelineProps = {
   nightLabel: string;
 };
 
+type Anchor = "start" | "center" | "end";
+
 export function Timeline({
   schedule,
   location,
@@ -52,50 +54,82 @@ export function Timeline({
       </div>
 
       <div className="visual-timeline">
-        <div className="timeline-track" aria-label={title}>
-          {schedule.segments.map((segment) => {
-            const duration = segment.end.getTime() - segment.start.getTime();
-            return (
-              <div
-                key={segment.id}
-                className={`segment-block ${segment.kind} ${segment.isCurrent ? "is-current" : ""}`}
-                style={{ flexGrow: duration }}
-                title={`${getSegmentLabel(segment, language)} ${formatInTimeZone(segment.start, location.timezone, language)} - ${formatInTimeZone(segment.end, location.timezone, language)}`}
-              >
-                <span>{segment.index}</span>
-              </div>
-            );
-          })}
+        <div className="timeline-plot" aria-label={title}>
+          <div className="timeline-track">
+            {schedule.segments.map((segment) => {
+              const duration = segment.end.getTime() - segment.start.getTime();
+              return (
+                <div
+                  key={segment.id}
+                  className={`segment-block ${segment.kind} ${segment.isCurrent ? "is-current" : ""}`}
+                  style={{ flexGrow: duration }}
+                  title={`${getSegmentLabel(segment, language)} ${formatInTimeZone(segment.start, location.timezone, language)} - ${formatInTimeZone(segment.end, location.timezone, language)}`}
+                >
+                  <span>{segment.index}</span>
+                </div>
+              );
+            })}
+          </div>
 
-          <Marker className="now-marker" left={nowOffset} label={nowLabel} />
-          <Marker className="sunrise-marker" left={sunriseOffset} label={sunriseLabel} />
-          <Marker className="sunset-marker" left={sunsetOffset} label={sunsetLabel} />
-        </div>
-
-        <div className="marker-label-row">
-          <span style={{ left: `${sunriseOffset}%` }}>
-            {sunriseLabel} {formatInTimeZone(schedule.solarTimes.sunrise, location.timezone, language)}
-          </span>
-          <span style={{ left: `${sunsetOffset}%` }}>
-            {sunsetLabel} {formatInTimeZone(schedule.solarTimes.sunset, location.timezone, language)}
-          </span>
-          <span className="now-readout" style={{ left: `${nowOffset}%` }}>
-            {nowLabel} {schedule.modernTime}
-          </span>
+          <Marker
+            className="sunrise-marker"
+            left={sunriseOffset}
+            label={`${sunriseLabel} ${formatInTimeZone(schedule.solarTimes.sunrise, location.timezone, language)}`}
+            anchor={getAnchor(sunriseOffset)}
+            placement="top"
+          />
+          <Marker
+            className="sunset-marker"
+            left={sunsetOffset}
+            label={`${sunsetLabel} ${formatInTimeZone(schedule.solarTimes.sunset, location.timezone, language)}`}
+            anchor={getAnchor(sunsetOffset)}
+            placement="top"
+          />
+          <Marker
+            className="now-marker"
+            left={nowOffset}
+            label={`${nowLabel} ${schedule.modernTime}`}
+            anchor={getAnchor(nowOffset)}
+            placement="bottom"
+          />
         </div>
       </div>
     </section>
   );
 }
 
-function Marker({ left, label, className }: { left: number; label: string; className: string }) {
+function Marker({
+  left,
+  label,
+  className,
+  anchor,
+  placement,
+}: {
+  left: number;
+  label: string;
+  className: string;
+  anchor: Anchor;
+  placement: "top" | "bottom";
+}) {
   return (
     <div className={`timeline-marker ${className}`} style={{ left: `${left}%` }} aria-label={label}>
-      <span>{label}</span>
+      <span className={`timeline-marker-label ${placement}`} data-anchor={anchor}>
+        {label}
+      </span>
     </div>
   );
 }
 
 function clampPercent(value: number) {
   return Math.min(100, Math.max(0, value));
+}
+
+function getAnchor(offset: number): Anchor {
+  if (offset <= 12) {
+    return "start";
+  }
+  if (offset >= 88) {
+    return "end";
+  }
+  return "center";
 }

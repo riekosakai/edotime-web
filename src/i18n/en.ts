@@ -35,7 +35,9 @@ const en = {
     "Because day and night length change with season and latitude, each segment is not fixed. The same clock time can map to different Edo segments in Tokyo and San Salvador.",
   loading: "Calculating...",
   locationDenied: "Location access was denied. Please choose a place manually.",
-  locationUnavailable: "Unable to read your current location.",
+  locationUnavailable: "Unable to determine your current location.",
+  locationTimeout: "Location request timed out. Please try again where reception is better.",
+  locationUnsupported: "This browser does not support geolocation. Please choose a place manually.",
   solarError: "Could not calculate times for this place/date.",
   offlineFallback: "You are offline, so the latest saved result is shown.",
   searchError: "Place search failed.",
@@ -48,6 +50,7 @@ const en = {
   lastUpdated: "Updated",
   retry: "Retry",
   currentLocationName: "Current location",
+  locating: "Locating...",
   locationCoordinates: "Coordinates",
 };
 

@@ -36,6 +36,8 @@ const ja = {
   loading: "計算中…",
   locationDenied: "現在地が取得できませんでした。地点を手動で指定してください。",
   locationUnavailable: "現在地を取得できませんでした。",
+  locationTimeout: "現在地の取得がタイムアウトしました。電波の良い場所で再試行してください。",
+  locationUnsupported: "このブラウザでは現在地取得に対応していません。地点を手動で指定してください。",
   solarError: "この地点/日付の時刻を取得できませんでした。",
   offlineFallback: "オフラインのため、直近の保存データを表示しています。",
   searchError: "地点検索に失敗しました。",
@@ -48,6 +50,7 @@ const ja = {
   lastUpdated: "更新時刻",
   retry: "再試行",
   currentLocationName: "現在地",
+  locating: "現在地を取得中…",
   locationCoordinates: "座標",
 };
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { searchLocations } from "../lib/location";
 import type { LocationSelection } from "../types";
 
@@ -39,6 +39,15 @@ export function LocationPicker({
   const [latitude, setLatitude] = useState(String(selectedLocation?.latitude ?? 35.6764));
   const [longitude, setLongitude] = useState(String(selectedLocation?.longitude ?? 139.65));
 
+  useEffect(() => {
+    if (!selectedLocation) {
+      return;
+    }
+
+    setLatitude(String(selectedLocation.latitude));
+    setLongitude(String(selectedLocation.longitude));
+  }, [selectedLocation]);
+
   async function handleSearch() {
     if (!query.trim()) {
       setResults([]);
@@ -55,9 +64,14 @@ export function LocationPicker({
 
   return (
     <section className="location-picker-body">
-      <div className="panel-header">
+      <div className="panel-header location-picker-header">
         <h2>{labels.title}</h2>
-        <button className="button-primary" onClick={onUseCurrentLocation} disabled={geolocating}>
+        <button
+          type="button"
+          className="button-primary location-primary-button"
+          onClick={onUseCurrentLocation}
+          disabled={geolocating}
+        >
           {labels.useCurrentLocation}
         </button>
       </div>
@@ -78,7 +92,7 @@ export function LocationPicker({
             placeholder={labels.searchPlaceholder}
           />
         </label>
-        <button className="button-secondary" onClick={() => void handleSearch()}>
+        <button type="button" className="button-secondary" onClick={() => void handleSearch()}>
           {labels.searchButton}
         </button>
       </div>
@@ -88,7 +102,12 @@ export function LocationPicker({
         <div className="result-list">
           <p className="muted strong">{labels.searchResults}</p>
           {results.map((result) => (
-            <button key={`${result.latitude}-${result.longitude}`} className="result-item" onClick={() => void onSelectLocation(result)}>
+            <button
+              key={`${result.latitude}-${result.longitude}`}
+              type="button"
+              className="result-item"
+              onClick={() => void onSelectLocation(result)}
+            >
               <strong>{result.name}</strong>
               <span>{result.timezone}</span>
             </button>
@@ -107,6 +126,7 @@ export function LocationPicker({
         </label>
       </div>
       <button
+        type="button"
         className="button-secondary"
         onClick={() => void onApplyCoordinates(Number(latitude), Number(longitude))}
       >

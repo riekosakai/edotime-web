@@ -9,7 +9,6 @@ import { getMessages } from "./i18n";
 import { saveLanguage, loadLanguage } from "./lib/storage";
 import { useEdoTime } from "./hooks/useEdoTime";
 import { useGeolocation } from "./hooks/useGeolocation";
-import { reverseGeocode, fetchTimezone } from "./lib/location";
 import type { Language } from "./types";
 
 function App() {
@@ -27,13 +26,14 @@ function App() {
   async function handleUseCurrentLocation() {
     try {
       const position = await getCurrentPosition();
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-      const timezone = await fetchTimezone(latitude, longitude);
-      const name = (await reverseGeocode(latitude, longitude)) ?? dict.currentLocationName;
-      await refresh({ name, latitude, longitude, timezone });
+      await selectCoordinates(
+        position.coords.latitude,
+        position.coords.longitude,
+        dict.currentLocationName,
+      );
+      setLocationEditorOpen(false);
     } catch {
-      // The hook already stores a stable error code.
+      // useGeolocation stores a stable error code and the UI keeps manual fallback available.
     }
   }
 
@@ -52,6 +52,8 @@ function App() {
 
         {geolocationError === "denied" ? <p className="banner warning">{dict.locationDenied}</p> : null}
         {geolocationError === "unavailable" ? <p className="banner warning">{dict.locationUnavailable}</p> : null}
+        {geolocationError === "timeout" ? <p className="banner warning">{dict.locationTimeout}</p> : null}
+        {geolocationError === "unsupported" ? <p className="banner warning">{dict.locationUnsupported}</p> : null}
         {error === "solar" ? <p className="banner error">{dict.solarError}</p> : null}
         {usingOfflineFallback ? <p className="banner info">{dict.offlineFallback}</p> : null}
 
@@ -101,7 +103,7 @@ function App() {
           <LocationPicker
             labels={{
               title: dict.locationSectionTitle,
-              useCurrentLocation: dict.useCurrentLocation,
+              useCurrentLocation: geolocating ? dict.locating : dict.useCurrentLocation,
               searchLabel: dict.locationSearchLabel,
               searchPlaceholder: dict.locationSearchPlaceholder,
               searchButton: dict.searchButton,
