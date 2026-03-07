@@ -1,3 +1,6 @@
+🌏 Live Demo
+https://edotime-web.pages.dev/
+
 # EdoTime
 
 EdoTime is a responsive PWA web app that shows Edo-style temporal time from the selected location's local sunrise and sunset. It is designed as a static client-side app for desktop, Android, and iPhone browsers.
