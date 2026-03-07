@@ -1,0 +1,17 @@
+{
+  "name": "EdoTime",
+  "short_name": "EdoTime",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4ecdd",
+  "theme_color": "#f4ecdd",
+  "description": "Edo-style temporal time based on local sunrise and sunset.",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
