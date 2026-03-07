@@ -78,10 +78,6 @@ export function CurrentEdoTimeCard({
 
       <div className="hero-support-grid">
         <div className="stat">
-          <span>{labels.nextSegmentIn}</span>
-          <strong>{formatRelativeDuration(schedule.remainingMs, language)}</strong>
-        </div>
-        <div className="stat">
           <span>{labels.sunrise}</span>
           <strong>{formatInTimeZone(schedule.solarTimes.sunrise, location.timezone, language)}</strong>
         </div>

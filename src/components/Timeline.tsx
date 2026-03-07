@@ -83,14 +83,6 @@ export function Timeline({
             {nowLabel} {schedule.modernTime}
           </span>
         </div>
-
-        <div className="timeline-current-readout">
-          <strong>{getSegmentLabel(schedule.currentSegment, language)}</strong>
-          <span>
-            {formatInTimeZone(schedule.currentSegment.start, location.timezone, language)} -{" "}
-            {formatInTimeZone(schedule.currentSegment.end, location.timezone, language)}
-          </span>
-        </div>
       </div>
     </section>
   );
