@@ -1,4 +1,8 @@
-🌏 Live Demo
+# EdoTime Web
+
+A web application that visualizes traditional Japanese Edo-period time using sunrise and sunset calculations at your location.
+
+Live demo  
 https://edotime-web.pages.dev/
 
 # EdoTime
