@@ -1,18 +1,21 @@
 import { getTimeZoneDateString } from "./time";
-import type { LocationSelection, SolarTimes } from "../types";
+import type { LocationSelection, SolarDayTimes } from "../types";
 
 type OpenMeteoResponse = {
   timezone: string;
   daily: {
     sunrise: number[];
     sunset: number[];
+    time: string[];
   };
 };
 
-export async function fetchSolarTimes(
+export type SolarCache = Record<string, SolarDayTimes>;
+
+export async function fetchSolarRange(
   location: LocationSelection,
   baseDate: Date,
-): Promise<SolarTimes> {
+): Promise<SolarCache> {
   const yesterdayDate = new Date(baseDate.getTime() - 24 * 60 * 60 * 1000);
   const tomorrowDate = new Date(baseDate.getTime() + 24 * 60 * 60 * 1000);
   const yesterday = getTimeZoneDateString(yesterdayDate, location.timezone);
@@ -34,33 +37,71 @@ export async function fetchSolarTimes(
   }
 
   const data = (await response.json()) as OpenMeteoResponse;
-  if (
-    !data.daily.sunrise?.[0] ||
-    !data.daily.sunrise?.[1] ||
-    !data.daily.sunrise?.[2] ||
-    !data.daily.sunset?.[0] ||
-    !data.daily.sunset?.[1]
-  ) {
+  if (!data.daily.time?.length || !data.daily.sunrise?.length || !data.daily.sunset?.length) {
     throw new Error("Solar data missing");
   }
 
-  const yesterdaySunrise = new Date(data.daily.sunrise[0] * 1000);
-  const yesterdaySunset = new Date(data.daily.sunset[0] * 1000);
-  const todaySunrise = new Date(data.daily.sunrise[1] * 1000);
-  const todaySunset = new Date(data.daily.sunset[1] * 1000);
-  const tomorrowSunrise = new Date(data.daily.sunrise[2] * 1000);
+  const cache: SolarCache = {};
+  for (let index = 0; index < data.daily.time.length; index += 1) {
+    const dateKey = data.daily.time[index];
+    const sunrise = data.daily.sunrise[index];
+    const sunset = data.daily.sunset[index];
 
-  if (baseDate < todaySunrise) {
+    if (!dateKey || !sunrise || !sunset) {
+      continue;
+    }
+
+    cache[dateKey] = {
+      dateKey,
+      sunrise: new Date(sunrise * 1000),
+      sunset: new Date(sunset * 1000),
+    };
+  }
+
+  return cache;
+}
+
+export function getRequiredSolarDateKeys(now: Date, timeZone: string) {
+  const current = getTimeZoneDateString(now, timeZone);
+  const yesterday = getTimeZoneDateString(new Date(now.getTime() - 24 * 60 * 60 * 1000), timeZone);
+  const tomorrow = getTimeZoneDateString(new Date(now.getTime() + 24 * 60 * 60 * 1000), timeZone);
+
+  return { yesterday, current, tomorrow };
+}
+
+export function resolveSolarTimes(
+  now: Date,
+  timeZone: string,
+  cache: SolarCache,
+): SolarTimes | null {
+  const { yesterday, current, tomorrow } = getRequiredSolarDateKeys(now, timeZone);
+  const yesterdayDay = cache[yesterday];
+  const todayDay = cache[current];
+  const tomorrowDay = cache[tomorrow];
+
+  if (!yesterdayDay || !todayDay || !tomorrowDay) {
+    return null;
+  }
+
+  if (now < todayDay.sunrise) {
     return {
-      sunrise: yesterdaySunrise,
-      sunset: yesterdaySunset,
-      nextSunrise: todaySunrise,
+      sunrise: yesterdayDay.sunrise,
+      sunset: yesterdayDay.sunset,
+      nextSunrise: todayDay.sunrise,
+    };
+  }
+
+  if (now < todayDay.sunset) {
+    return {
+      sunrise: todayDay.sunrise,
+      sunset: todayDay.sunset,
+      nextSunrise: tomorrowDay.sunrise,
     };
   }
 
   return {
-    sunrise: todaySunrise,
-    sunset: todaySunset,
-    nextSunrise: tomorrowSunrise,
+    sunrise: todayDay.sunrise,
+    sunset: todayDay.sunset,
+    nextSunrise: tomorrowDay.sunrise,
   };
 }

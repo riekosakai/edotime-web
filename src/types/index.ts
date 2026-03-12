@@ -13,6 +13,12 @@ export type SolarTimes = {
   nextSunrise: Date;
 };
 
+export type SolarDayTimes = {
+  dateKey: string;
+  sunrise: Date;
+  sunset: Date;
+};
+
 export type EdoSegment = {
   id: string;
   kind: "day" | "night";
