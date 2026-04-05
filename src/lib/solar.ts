@@ -1,5 +1,5 @@
 import { getTimeZoneDateString } from "./time";
-import type { LocationSelection, SolarDayTimes, SolarTimes } from "../types";
+import type { LocationSelection, SolarDayTimes } from "../types";
 
 type OpenMeteoResponse = {
   timezone: string;
@@ -79,18 +79,16 @@ export function resolveSolarTimes(
   const todayDay = cache[current];
   const tomorrowDay = cache[tomorrow];
 
-  // 深夜〜日の出前は「前日の日の出・日の入り → 今日の日の出」で計算できる。
-  // tomorrowDay は不要なので、日付跨ぎ直後にキャッシュになくてもカウントダウンを継続できる。
-  if (todayDay && yesterdayDay && now < todayDay.sunrise) {
+  if (!yesterdayDay || !todayDay || !tomorrowDay) {
+    return null;
+  }
+
+  if (now < todayDay.sunrise) {
     return {
       sunrise: yesterdayDay.sunrise,
       sunset: yesterdayDay.sunset,
       nextSunrise: todayDay.sunrise,
     };
-  }
-
-  if (!todayDay || !tomorrowDay) {
-    return null;
   }
 
   if (now < todayDay.sunset) {
