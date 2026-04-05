@@ -1,5 +1,5 @@
 import { getTimeZoneDateString } from "./time";
-import type { LocationSelection, SolarDayTimes } from "../types";
+import type { LocationSelection, SolarDayTimes, SolarTimes } from "../types";
 
 type OpenMeteoResponse = {
   timezone: string;
