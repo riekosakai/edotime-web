@@ -432,33 +432,37 @@ p {
   border: 1px solid rgba(22, 34, 48, 0.08);
 }
 
-.location-disclosure summary,
+.location-disclosure-trigger,
 .details-panel summary {
-  list-style: none;
   cursor: pointer;
   font-weight: 700;
+  list-style: none;
+  background: none;
+  border: none;
+  padding: 0;
+  width: 100%;
+  text-align: left;
 }
 
-.location-disclosure summary::-webkit-details-marker,
 .details-panel summary::-webkit-details-marker {
   display: none;
 }
 
-.location-disclosure summary,
+.location-disclosure-trigger,
 .details-panel summary {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.location-disclosure summary::after,
+.location-disclosure-trigger::after,
 .details-panel summary::after {
   content: "+";
   font-size: 1.25rem;
   color: #6d5a39;
 }
 
-.location-disclosure[open] summary::after,
+.location-disclosure-trigger[aria-expanded="true"]::after,
 .details-panel[open] summary::after {
   content: "−";
 }

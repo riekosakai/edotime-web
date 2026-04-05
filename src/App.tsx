@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CurrentEdoTimeCard } from "./components/CurrentEdoTimeCard";
 import { DetailsSection } from "./components/DetailsSection";
 import { Header } from "./components/Header";
@@ -14,6 +14,7 @@ import type { Language } from "./types";
 function App() {
   const [language, setLanguage] = useState<Language>(() => loadLanguage());
   const [locationEditorOpen, setLocationEditorOpen] = useState(false);
+  const locationPickerRef = useRef<HTMLDivElement>(null);
   const dict = getMessages(language);
   const { loading: geolocating, error: geolocationError, getCurrentPosition } = useGeolocation();
   const { location, schedule, loading, error, usingOfflineFallback, lastUpdated, refresh, selectCoordinates } =
@@ -78,7 +79,16 @@ function App() {
           }}
           loading={loading}
           lastUpdated={lastUpdated}
-          onChangeLocation={() => setLocationEditorOpen((open) => !open)}
+          onChangeLocation={() => {
+            setLocationEditorOpen((open) => {
+              if (!open) {
+                setTimeout(() => {
+                  locationPickerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }, 0);
+              }
+              return !open;
+            });
+          }}
         />
 
         <Timeline
@@ -94,13 +104,16 @@ function App() {
           nightLabel={dict.night}
         />
 
-        <details
-          className="panel location-disclosure"
-          open={locationEditorOpen}
-          onToggle={(event) => setLocationEditorOpen((event.currentTarget as HTMLDetailsElement).open)}
-        >
-          <summary>{dict.changeLocation}</summary>
-          <LocationPicker
+        <div ref={locationPickerRef} className="panel location-disclosure">
+          <button
+            type="button"
+            className="location-disclosure-trigger"
+            aria-expanded={locationEditorOpen}
+            onClick={() => setLocationEditorOpen((open) => !open)}
+          >
+            {dict.changeLocation}
+          </button>
+          {locationEditorOpen && <LocationPicker
             labels={{
               title: dict.locationSectionTitle,
               useCurrentLocation: geolocating ? dict.locating : dict.useCurrentLocation,
@@ -127,8 +140,8 @@ function App() {
               await selectCoordinates(latitude, longitude);
               setLocationEditorOpen(false);
             }}
-          />
-        </details>
+          />}
+        </div>
 
         <DetailsSection
           schedule={schedule}

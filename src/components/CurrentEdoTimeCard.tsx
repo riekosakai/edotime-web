@@ -56,7 +56,7 @@ export function CurrentEdoTimeCard({
             {labels.locationCoordinates}: {location.latitude.toFixed(2)}, {location.longitude.toFixed(2)}
           </span>
         </div>
-        <button className="button-secondary subtle-button" onClick={onChangeLocation}>
+        <button type="button" className="button-secondary subtle-button" onClick={onChangeLocation}>
           {labels.changeLocation}
         </button>
       </div>
