@@ -94,41 +94,46 @@ function App() {
           nightLabel={dict.night}
         />
 
-        <details
-          className="panel location-disclosure"
-          open={locationEditorOpen}
-          onToggle={(event) => setLocationEditorOpen((event.currentTarget as HTMLDetailsElement).open)}
-        >
-          <summary>{dict.changeLocation}</summary>
-          <LocationPicker
-            labels={{
-              title: dict.locationSectionTitle,
-              useCurrentLocation: geolocating ? dict.locating : dict.useCurrentLocation,
-              searchLabel: dict.locationSearchLabel,
-              searchPlaceholder: dict.locationSearchPlaceholder,
-              searchButton: dict.searchButton,
-              latitude: dict.latitude,
-              longitude: dict.longitude,
-              applyCoordinates: dict.applyCoordinates,
-              selectedLocation: dict.selectedLocation,
-              timezone: dict.timezone,
-              searchResults: dict.searchResults,
-              geolocationHelp: dict.geolocationHelp,
-              searchError: dict.searchError,
-            }}
-            selectedLocation={location}
-            geolocating={geolocating}
-            onUseCurrentLocation={() => void handleUseCurrentLocation()}
-            onSelectLocation={async (selected) => {
-              await refresh(selected);
-              setLocationEditorOpen(false);
-            }}
-            onApplyCoordinates={async (latitude, longitude) => {
-              await selectCoordinates(latitude, longitude);
-              setLocationEditorOpen(false);
-            }}
-          />
-        </details>
+        <div className="panel location-disclosure">
+          <button
+            type="button"
+            className="location-disclosure-trigger"
+            aria-expanded={locationEditorOpen}
+            onClick={() => setLocationEditorOpen((open) => !open)}
+          >
+            {dict.changeLocation}
+          </button>
+          {locationEditorOpen && (
+            <LocationPicker
+              labels={{
+                title: dict.locationSectionTitle,
+                useCurrentLocation: geolocating ? dict.locating : dict.useCurrentLocation,
+                searchLabel: dict.locationSearchLabel,
+                searchPlaceholder: dict.locationSearchPlaceholder,
+                searchButton: dict.searchButton,
+                latitude: dict.latitude,
+                longitude: dict.longitude,
+                applyCoordinates: dict.applyCoordinates,
+                selectedLocation: dict.selectedLocation,
+                timezone: dict.timezone,
+                searchResults: dict.searchResults,
+                geolocationHelp: dict.geolocationHelp,
+                searchError: dict.searchError,
+              }}
+              selectedLocation={location}
+              geolocating={geolocating}
+              onUseCurrentLocation={() => void handleUseCurrentLocation()}
+              onSelectLocation={async (selected) => {
+                await refresh(selected);
+                setLocationEditorOpen(false);
+              }}
+              onApplyCoordinates={async (latitude, longitude) => {
+                await selectCoordinates(latitude, longitude);
+                setLocationEditorOpen(false);
+              }}
+            />
+          )}
+        </div>
 
         <DetailsSection
           schedule={schedule}
