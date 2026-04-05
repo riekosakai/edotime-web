@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CurrentEdoTimeCard } from "./components/CurrentEdoTimeCard";
 import { DetailsSection } from "./components/DetailsSection";
 import { Header } from "./components/Header";
@@ -14,6 +14,7 @@ import type { Language } from "./types";
 function App() {
   const [language, setLanguage] = useState<Language>(() => loadLanguage());
   const [locationEditorOpen, setLocationEditorOpen] = useState(false);
+  const locationDisclosureRef = useRef<HTMLDivElement>(null);
   const dict = getMessages(language);
   const { loading: geolocating, error: geolocationError, getCurrentPosition } = useGeolocation();
   const { location, schedule, loading, error, usingOfflineFallback, lastUpdated, refresh, selectCoordinates } =
@@ -22,6 +23,12 @@ function App() {
   useEffect(() => {
     saveLanguage(language);
   }, [language]);
+
+  useEffect(() => {
+    if (locationEditorOpen) {
+      locationDisclosureRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [locationEditorOpen]);
 
   async function handleUseCurrentLocation() {
     try {
@@ -94,7 +101,7 @@ function App() {
           nightLabel={dict.night}
         />
 
-        <div className="panel location-disclosure">
+        <div ref={locationDisclosureRef} className="panel location-disclosure">
           <button
             type="button"
             className="location-disclosure-trigger"
