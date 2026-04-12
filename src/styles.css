@@ -722,56 +722,19 @@ p {
   }
 }
 
-.location-toggle-button,
-.location-disclosure-toggle {
+.location-jump-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.55rem;
-}
-
-.location-toggle-button {
   flex-shrink: 0;
 }
 
-.location-disclosure {
-  padding-top: 0.85rem;
-}
-
-.location-disclosure-toggle {
-  width: 100%;
-  border: 0;
-  background: transparent;
-  color: #162230;
-  font-weight: 700;
-  text-align: left;
-  padding: 0;
-  justify-content: space-between;
-}
-
-.location-disclosure-body {
-  margin-top: 0.95rem;
-}
-
-.toggle-chevron {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 180ms ease;
-}
-
-.location-toggle-button.is-open .toggle-chevron,
-.location-disclosure-toggle.is-open .toggle-chevron {
-  transform: rotate(180deg);
-}
-
-.location-disclosure.is-open {
-  box-shadow: 0 20px 46px rgba(38, 53, 75, 0.1);
+.location-editor-section {
+  scroll-margin-top: 1rem;
 }
 
 @media (max-width: 720px) {
-  .location-toggle-button,
-  .location-disclosure-toggle {
+  .location-jump-button {
     width: 100%;
   }
 }

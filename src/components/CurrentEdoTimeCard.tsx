@@ -24,7 +24,6 @@ type CurrentEdoTimeCardProps = {
   loading: boolean;
   lastUpdated: string | null;
   onChangeLocation: () => void;
-  isLocationEditorOpen: boolean;
 };
 
 export function CurrentEdoTimeCard({
@@ -35,7 +34,6 @@ export function CurrentEdoTimeCard({
   loading,
   lastUpdated,
   onChangeLocation,
-  isLocationEditorOpen,
 }: CurrentEdoTimeCardProps) {
   if (loading && !schedule) {
     return <section className="panel tall center">{labels.loading}</section>;
@@ -60,15 +58,11 @@ export function CurrentEdoTimeCard({
         </div>
         <button
           type="button"
-          className={`button-secondary subtle-button location-toggle-button ${isLocationEditorOpen ? "is-open" : ""}`}
+          className="button-secondary subtle-button location-jump-button"
           onClick={onChangeLocation}
-          aria-expanded={isLocationEditorOpen}
-          aria-controls="location-disclosure-panel"
+          aria-controls="location-editor"
         >
           <span>{labels.changeLocation}</span>
-          <span className="toggle-chevron" aria-hidden="true">
-            ⌄
-          </span>
         </button>
       </div>
 

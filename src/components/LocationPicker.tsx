@@ -23,6 +23,7 @@ type LocationPickerProps = {
   onUseCurrentLocation: () => void;
   onSelectLocation: (location: LocationSelection) => void | Promise<void>;
   onApplyCoordinates: (latitude: number, longitude: number) => void | Promise<void>;
+  searchInputId?: string;
 };
 
 export function LocationPicker({
@@ -32,6 +33,7 @@ export function LocationPicker({
   onUseCurrentLocation,
   onSelectLocation,
   onApplyCoordinates,
+  searchInputId,
 }: LocationPickerProps) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<LocationSelection[]>([]);
@@ -81,6 +83,7 @@ export function LocationPicker({
         <label className="field grow">
           <span>{labels.searchLabel}</span>
           <input
+            id={searchInputId}
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}

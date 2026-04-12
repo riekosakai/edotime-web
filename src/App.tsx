@@ -13,7 +13,6 @@ import type { Language } from "./types";
 
 function App() {
   const [language, setLanguage] = useState<Language>(() => loadLanguage());
-  const [locationEditorOpen, setLocationEditorOpen] = useState(false);
   const dict = getMessages(language);
   const { loading: geolocating, error: geolocationError, getCurrentPosition } = useGeolocation();
   const { location, schedule, loading, error, usingOfflineFallback, lastUpdated, refresh, selectCoordinates } =
@@ -31,14 +30,21 @@ function App() {
         position.coords.longitude,
         dict.currentLocationName,
       );
-      setLocationEditorOpen(false);
     } catch {
       // useGeolocation stores a stable error code and the UI keeps manual fallback available.
     }
   }
 
-  function toggleLocationEditor() {
-    setLocationEditorOpen((open) => !open);
+  function scrollToLocationEditor() {
+    const editor = document.getElementById("location-editor");
+    editor?.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    window.setTimeout(() => {
+      const searchInput = document.getElementById("location-search-input");
+      if (searchInput instanceof HTMLInputElement) {
+        searchInput.focus({ preventScroll: true });
+      }
+    }, 250);
   }
 
   return (
@@ -82,8 +88,7 @@ function App() {
           }}
           loading={loading}
           lastUpdated={lastUpdated}
-          onChangeLocation={toggleLocationEditor}
-          isLocationEditorOpen={locationEditorOpen}
+          onChangeLocation={scrollToLocationEditor}
         />
 
         <Timeline
@@ -99,55 +104,34 @@ function App() {
           nightLabel={dict.night}
         />
 
-        <section
-          id="location-disclosure-panel"
-          className={`panel location-disclosure ${locationEditorOpen ? "is-open" : ""}`}
-        >
-          <button
-            type="button"
-            className={`location-disclosure-toggle ${locationEditorOpen ? "is-open" : ""}`}
-            onClick={toggleLocationEditor}
-            aria-expanded={locationEditorOpen}
-            aria-controls="location-disclosure-panel"
-          >
-            <span>{dict.changeLocation}</span>
-            <span className="toggle-chevron" aria-hidden="true">
-              ⌄
-            </span>
-          </button>
-
-          {locationEditorOpen ? (
-            <div className="location-disclosure-body">
-              <LocationPicker
-                labels={{
-                  title: dict.locationSectionTitle,
-                  useCurrentLocation: geolocating ? dict.locating : dict.useCurrentLocation,
-                  searchLabel: dict.locationSearchLabel,
-                  searchPlaceholder: dict.locationSearchPlaceholder,
-                  searchButton: dict.searchButton,
-                  latitude: dict.latitude,
-                  longitude: dict.longitude,
-                  applyCoordinates: dict.applyCoordinates,
-                  selectedLocation: dict.selectedLocation,
-                  timezone: dict.timezone,
-                  searchResults: dict.searchResults,
-                  geolocationHelp: dict.geolocationHelp,
-                  searchError: dict.searchError,
-                }}
-                selectedLocation={location}
-                geolocating={geolocating}
-                onUseCurrentLocation={() => void handleUseCurrentLocation()}
-                onSelectLocation={async (selected) => {
-                  await refresh(selected);
-                  setLocationEditorOpen(false);
-                }}
-                onApplyCoordinates={async (latitude, longitude) => {
-                  await selectCoordinates(latitude, longitude);
-                  setLocationEditorOpen(false);
-                }}
-              />
-            </div>
-          ) : null}
+        <section id="location-editor" className="panel location-editor-section">
+          <LocationPicker
+            labels={{
+              title: dict.locationSectionTitle,
+              useCurrentLocation: geolocating ? dict.locating : dict.useCurrentLocation,
+              searchLabel: dict.locationSearchLabel,
+              searchPlaceholder: dict.locationSearchPlaceholder,
+              searchButton: dict.searchButton,
+              latitude: dict.latitude,
+              longitude: dict.longitude,
+              applyCoordinates: dict.applyCoordinates,
+              selectedLocation: dict.selectedLocation,
+              timezone: dict.timezone,
+              searchResults: dict.searchResults,
+              geolocationHelp: dict.geolocationHelp,
+              searchError: dict.searchError,
+            }}
+            selectedLocation={location}
+            geolocating={geolocating}
+            onUseCurrentLocation={() => void handleUseCurrentLocation()}
+            onSelectLocation={async (selected) => {
+              await refresh(selected);
+            }}
+            onApplyCoordinates={async (latitude, longitude) => {
+              await selectCoordinates(latitude, longitude);
+            }}
+            searchInputId="location-search-input"
+          />
         </section>
 
         <DetailsSection
