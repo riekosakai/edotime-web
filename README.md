@@ -1,26 +1,37 @@
-🌏 Live Demo
-https://edotime-web.pages.dev/
-
 # EdoTime
 
-EdoTime is a responsive PWA web app that shows Edo-style temporal time from the selected location's local sunrise and sunset. It is designed as a static client-side app for desktop, Android, and iPhone browsers.
+🌏 **Live Demo**
+https://edotime-web.pages.dev/
+
+## Overview
+
+EdoTime is a responsive PWA web app that visualizes traditional Japanese Edo-period temporal time based on sunrise and sunset at any selected location.
+
+Unlike modern fixed-hour systems, Edo time divides day and night into six equal parts, so the length of each “hour” changes depending on the season and location.
 
 ## Features
 
-- Browser geolocation with manual coordinate fallback
-- Place search via Open-Meteo geocoding
-- Timezone-aware sunrise/sunset lookup via Open-Meteo
-- Current Edo segment, remaining time, and 12-segment timeline
-- Japanese and English UI
-- Offline fallback using the last cached result
-- Basic PWA manifest and service worker
+* Browser geolocation with manual coordinate fallback
+* Place search via Open-Meteo geocoding
+* Timezone-aware sunrise/sunset lookup
+* Current Edo segment and real-time countdown
+* 12-segment timeline visualization
+* Japanese and English UI
+* Offline fallback using cached data
+* Basic PWA support (manifest + service worker)
 
-## Stack
+## Screenshot
 
-- React 19
-- TypeScript
-- Vite
-- Vitest
+<!-- Replace with your actual screenshot file -->
+
+![EdoTime screenshot](./screenshot.png)
+
+## Tech Stack
+
+* React 19
+* TypeScript
+* Vite
+* Vitest
 
 ## Development
 
@@ -43,10 +54,25 @@ npm run build
 
 ## Deployment
 
-The app is static and can be deployed to GitHub Pages or Cloudflare Pages after a production build.
+This is a static client-side app and can be deployed to:
+
+* Cloudflare Pages
+* GitHub Pages
 
 ## Notes
 
-- Solar times and timezone detection are fetched client-side from public Open-Meteo endpoints.
-- Reverse geocoding for current location naming uses OpenStreetMap Nominatim.
-- When the network is unavailable, the app falls back to the latest cached result if present.
+* Solar times and timezone detection use Open-Meteo APIs
+* Reverse geocoding uses OpenStreetMap Nominatim
+* When offline, the app falls back to the latest cached result if available
+
+## Concept
+
+Edo time divides day and night into six equal parts based on sunrise and sunset, so the length of “hours” changes every day.
+
+## License
+
+MIT License
+
+Copyright (c) 2026 Rieko Sakai
+
+Permission is hereby granted, free of charge, to any person obtaining a copy...
