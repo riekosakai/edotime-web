@@ -322,15 +322,31 @@ p {
   margin-top: 0.8rem;
 }
 
-.timeline-track {
+.timeline-plot {
   position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  padding-top: 1.85rem;
+  padding-bottom: 2.4rem;
+}
+
+.timeline-track {
   display: flex;
   align-items: stretch;
+  width: 100%;
   min-height: 4.5rem;
   border-radius: 1.4rem;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.58);
   border: 1px solid rgba(22, 34, 48, 0.08);
+  box-sizing: border-box;
+}
+
+.timeline-overlay {
+  position: absolute;
+  inset: 1.85rem 0 2.4rem;
+  box-sizing: border-box;
+  pointer-events: none;
 }
 
 .segment-block {
@@ -340,10 +356,14 @@ p {
   align-items: end;
   justify-content: center;
   padding: 0.65rem 0.2rem;
-  border-right: 1px solid rgba(255, 255, 255, 0.5);
   color: rgba(22, 34, 48, 0.7);
   font-size: 0.72rem;
   font-weight: 700;
+  box-sizing: border-box;
+}
+
+.segment-block + .segment-block {
+  box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.42);
 }
 
 .segment-block.day {
@@ -367,18 +387,19 @@ p {
   top: -0.1rem;
   bottom: -0.1rem;
   width: 0;
-  pointer-events: none;
+  box-sizing: border-box;
 }
 
 .timeline-marker::before {
   content: "";
   position: absolute;
-  left: 50%;
+  left: 0;
   transform: translateX(-50%);
   width: 2px;
   top: 0;
   bottom: 0;
   background: rgba(22, 34, 48, 0.35);
+  box-sizing: border-box;
 }
 
 .timeline-marker span {
@@ -605,24 +626,11 @@ p {
   }
 }
 
-.timeline-plot {
-  position: relative;
-  padding-top: 1.85rem;
-  padding-bottom: 2.4rem;
-}
-
-.timeline-plot .timeline-track {
-  width: 100%;
-}
-
-.timeline-plot .timeline-marker {
-  top: 1.85rem;
-  bottom: 2.4rem;
-}
 
 .timeline-marker-label {
   position: absolute;
   max-width: min(34vw, 9rem);
+  box-sizing: border-box;
   white-space: normal;
   line-height: 1.2;
   font-size: 0.74rem;
@@ -682,9 +690,8 @@ p {
     padding-bottom: 3.1rem;
   }
 
-  .timeline-plot .timeline-marker {
-    top: 2rem;
-    bottom: 3.1rem;
+  .timeline-overlay {
+    inset: 2rem 0 3.1rem;
   }
 
   .timeline-marker-label {
@@ -703,9 +710,8 @@ p {
     padding-bottom: 3.5rem;
   }
 
-  .timeline-plot .timeline-marker {
-    top: 2.2rem;
-    bottom: 3.5rem;
+  .timeline-overlay {
+    inset: 2.2rem 0 3.5rem;
   }
 
   .timeline-marker-label {

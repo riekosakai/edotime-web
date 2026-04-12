@@ -71,27 +71,29 @@ export function Timeline({
             })}
           </div>
 
-          <Marker
-            className="sunrise-marker"
-            left={sunriseOffset}
-            label={`${sunriseLabel} ${formatInTimeZone(schedule.solarTimes.sunrise, location.timezone, language)}`}
-            anchor={getAnchor(sunriseOffset)}
-            placement="top"
-          />
-          <Marker
-            className="sunset-marker"
-            left={sunsetOffset}
-            label={`${sunsetLabel} ${formatInTimeZone(schedule.solarTimes.sunset, location.timezone, language)}`}
-            anchor={getAnchor(sunsetOffset)}
-            placement="top"
-          />
-          <Marker
-            className="now-marker"
-            left={nowOffset}
-            label={`${nowLabel} ${schedule.modernTime}`}
-            anchor={getAnchor(nowOffset)}
-            placement="bottom"
-          />
+          <div className="timeline-overlay" aria-hidden="true">
+            <Marker
+              className="sunrise-marker"
+              left={sunriseOffset}
+              label={`${sunriseLabel} ${formatInTimeZone(schedule.solarTimes.sunrise, location.timezone, language)}`}
+              anchor={getAnchor(sunriseOffset)}
+              placement="top"
+            />
+            <Marker
+              className="sunset-marker"
+              left={sunsetOffset}
+              label={`${sunsetLabel} ${formatInTimeZone(schedule.solarTimes.sunset, location.timezone, language)}`}
+              anchor={getAnchor(sunsetOffset)}
+              placement="top"
+            />
+            <Marker
+              className="now-marker"
+              left={nowOffset}
+              label={`${nowLabel} ${schedule.modernTime}`}
+              anchor={getAnchor(nowOffset)}
+              placement="bottom"
+            />
+          </div>
         </div>
       </div>
     </section>
