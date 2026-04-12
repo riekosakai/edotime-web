@@ -22,9 +22,8 @@ Unlike modern fixed-hour systems, Edo time divides day and night into six equal 
 
 ## Screenshot
 
-<!-- Replace with your actual screenshot file -->
-
 ![EdoTime screenshot](./screenshot.png)
+![EdoTime screenshot](./screenshot2.png)
 
 ## Tech Stack
 
