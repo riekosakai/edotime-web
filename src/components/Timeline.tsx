@@ -38,7 +38,9 @@ export function Timeline({
   const total = end - start;
   const nowOffset = clampPercent(((schedule.now.getTime() - start) / total) * 100);
   const sunriseOffset = clampPercent(((schedule.solarTimes.sunrise.getTime() - start) / total) * 100);
-  const sunsetOffset = clampPercent(((schedule.solarTimes.sunset.getTime() - start) / total) * 100);
+  const firstNightSegment = schedule.segments.find((segment) => segment.kind === "night");
+  const sunsetBoundaryTime = firstNightSegment?.start ?? schedule.solarTimes.sunset;
+  const sunsetOffset = clampPercent(((sunsetBoundaryTime.getTime() - start) / total) * 100);
 
   return (
     <section className="panel timeline-panel">
@@ -61,7 +63,7 @@ export function Timeline({
               return (
                 <div
                   key={segment.id}
-                  className={`segment-block ${segment.kind} ${segment.isCurrent ? "is-current" : ""}`}
+                  className={`segment-block ${segment.kind} ${segment.isCurrent ? "is-current" : ""} ${segment.kind === "night" && segment.index === 1 ? "is-sunset-boundary" : ""}`}
                   style={{ flexGrow: duration }}
                   title={`${getSegmentLabel(segment, language)} ${formatInTimeZone(segment.start, location.timezone, language)} - ${formatInTimeZone(segment.end, location.timezone, language)}`}
                 >
@@ -80,9 +82,9 @@ export function Timeline({
               placement="top"
             />
             <Marker
-              className="sunset-marker"
+              className="sunset-marker sunset-label-only"
               left={sunsetOffset}
-              label={`${sunsetLabel} ${formatInTimeZone(schedule.solarTimes.sunset, location.timezone, language)}`}
+              label={`${sunsetLabel} ${formatInTimeZone(sunsetBoundaryTime, location.timezone, language)}`}
               anchor={getAnchor(sunsetOffset)}
               placement="top"
             />

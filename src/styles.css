@@ -366,6 +366,10 @@ p {
   box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.42);
 }
 
+.segment-block.is-sunset-boundary {
+  box-shadow: inset 2px 0 0 rgba(22, 34, 48, 0.48);
+}
+
 .segment-block.day {
   background: linear-gradient(180deg, #f7d98c 0%, #efc460 100%);
 }
@@ -667,9 +671,12 @@ p {
   text-align: right;
 }
 
-.timeline-marker.sunrise-marker::before,
-.timeline-marker.sunset-marker::before {
+.timeline-marker.sunrise-marker::before {
   top: 0.15rem;
+}
+
+.timeline-marker.sunset-marker::before {
+  display: none;
 }
 
 .timeline-marker.now-marker::before {
