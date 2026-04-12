@@ -9,6 +9,8 @@ EdoTime is a responsive PWA web app that visualizes traditional Japanese Edo-per
 
 Unlike modern fixed-hour systems, Edo time divides day and night into six equal parts, so the length of each “hour” changes depending on the season and location.
 
+Inspired by how people in the Edo period experienced time differently from modern fixed hours.
+
 ## Features
 
 * Browser geolocation with manual coordinate fallback
