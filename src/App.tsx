@@ -37,6 +37,10 @@ function App() {
     }
   }
 
+  function toggleLocationEditor() {
+    setLocationEditorOpen((open) => !open);
+  }
+
   return (
     <div className="app-shell">
       <div className="aurora aurora-left" />
@@ -78,7 +82,8 @@ function App() {
           }}
           loading={loading}
           lastUpdated={lastUpdated}
-          onChangeLocation={() => setLocationEditorOpen((open) => !open)}
+          onChangeLocation={toggleLocationEditor}
+          isLocationEditorOpen={locationEditorOpen}
         />
 
         <Timeline
@@ -94,41 +99,56 @@ function App() {
           nightLabel={dict.night}
         />
 
-        <details
-          className="panel location-disclosure"
-          open={locationEditorOpen}
-          onToggle={(event) => setLocationEditorOpen((event.currentTarget as HTMLDetailsElement).open)}
+        <section
+          id="location-disclosure-panel"
+          className={`panel location-disclosure ${locationEditorOpen ? "is-open" : ""}`}
         >
-          <summary>{dict.changeLocation}</summary>
-          <LocationPicker
-            labels={{
-              title: dict.locationSectionTitle,
-              useCurrentLocation: geolocating ? dict.locating : dict.useCurrentLocation,
-              searchLabel: dict.locationSearchLabel,
-              searchPlaceholder: dict.locationSearchPlaceholder,
-              searchButton: dict.searchButton,
-              latitude: dict.latitude,
-              longitude: dict.longitude,
-              applyCoordinates: dict.applyCoordinates,
-              selectedLocation: dict.selectedLocation,
-              timezone: dict.timezone,
-              searchResults: dict.searchResults,
-              geolocationHelp: dict.geolocationHelp,
-              searchError: dict.searchError,
-            }}
-            selectedLocation={location}
-            geolocating={geolocating}
-            onUseCurrentLocation={() => void handleUseCurrentLocation()}
-            onSelectLocation={async (selected) => {
-              await refresh(selected);
-              setLocationEditorOpen(false);
-            }}
-            onApplyCoordinates={async (latitude, longitude) => {
-              await selectCoordinates(latitude, longitude);
-              setLocationEditorOpen(false);
-            }}
-          />
-        </details>
+          <button
+            type="button"
+            className={`location-disclosure-toggle ${locationEditorOpen ? "is-open" : ""}`}
+            onClick={toggleLocationEditor}
+            aria-expanded={locationEditorOpen}
+            aria-controls="location-disclosure-panel"
+          >
+            <span>{dict.changeLocation}</span>
+            <span className="toggle-chevron" aria-hidden="true">
+              ⌄
+            </span>
+          </button>
+
+          {locationEditorOpen ? (
+            <div className="location-disclosure-body">
+              <LocationPicker
+                labels={{
+                  title: dict.locationSectionTitle,
+                  useCurrentLocation: geolocating ? dict.locating : dict.useCurrentLocation,
+                  searchLabel: dict.locationSearchLabel,
+                  searchPlaceholder: dict.locationSearchPlaceholder,
+                  searchButton: dict.searchButton,
+                  latitude: dict.latitude,
+                  longitude: dict.longitude,
+                  applyCoordinates: dict.applyCoordinates,
+                  selectedLocation: dict.selectedLocation,
+                  timezone: dict.timezone,
+                  searchResults: dict.searchResults,
+                  geolocationHelp: dict.geolocationHelp,
+                  searchError: dict.searchError,
+                }}
+                selectedLocation={location}
+                geolocating={geolocating}
+                onUseCurrentLocation={() => void handleUseCurrentLocation()}
+                onSelectLocation={async (selected) => {
+                  await refresh(selected);
+                  setLocationEditorOpen(false);
+                }}
+                onApplyCoordinates={async (latitude, longitude) => {
+                  await selectCoordinates(latitude, longitude);
+                  setLocationEditorOpen(false);
+                }}
+              />
+            </div>
+          ) : null}
+        </section>
 
         <DetailsSection
           schedule={schedule}
